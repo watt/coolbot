@@ -25,12 +25,16 @@ module.exports = (robot) ->
   #         channel: res.message.room
   #         timestamp: res.message.id
   #         token: process.env.SLACK_ACCESS_TOKEN
-  
+  robot.respond /are you there/, (res) ->
+    res.send "Yes, I'm here!"
+
   robot.respond /debug/, (res) ->
+    res.send "debug info:"
     options =
       noColor: true
-    res.reply """
+    json = prettyjson.render(res.message, options)
+    res.send  """
               ```
-              #{prettyjson.render(res.message, options)}
+              #{json}
               ```
               """
