@@ -24,17 +24,21 @@ module.exports = (robot) ->
   #         channel: res.message.room
   #         timestamp: res.message.id
   #         token: process.env.SLACK_ACCESS_TOKEN
-  
+    
   robot.respond /debug message/, (res) ->
-    res.send "message channel: #{res.message.room}"
-    res.send "message id: #{res.message.id}"
+    res.send """
+             your message:
+               channel name: #{res.message.room}
+               slack channel: #{res.message.rawMessage?.channel}
+               id: #{res.message.id}
+             """
   
   robot.respond /react with (\w+)/, (res) ->
     emoji = res.match[1]
     res.http("https://slack.com/api/reactions.add")
       .query
         name: emoji
-        channel: res.message.room
+        channel: res.message.rawMessage.channel
         timestamp: res.message.id
         token: process.env.HUBOT_SLACK_TOKEN
       .get() (err, resp, body) ->
