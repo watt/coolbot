@@ -8,12 +8,11 @@
 #   None
 #
 # Commands:
-#   None
+#   hubot react with <emoji> - make hubot add an emoji reaction
+#   hubot are you there - check if hubot is working
 #
 # Author:
 #   Andrew Watt
-
-prettyjson = require("prettyjson")
 
 module.exports = (robot) ->
   # robot.hear /.*/, (res) ->
@@ -25,16 +24,19 @@ module.exports = (robot) ->
   #         channel: res.message.room
   #         timestamp: res.message.id
   #         token: process.env.SLACK_ACCESS_TOKEN
+  
+  robot.respond /debug message/, (res) ->
+    res.send "message channel: #{res.message.room}"
+    res.send "message id: #{res.message.id}"
+  
+  robot.respond /react with (\w+)/, (res) ->
+    emoji = res.match[1]
+    res.http("https://slack.com/api/reactions.add")
+      .query
+        name: emoji
+        channel: res.message.room
+        timestamp: res.message.id
+        token: process.env.SLACK_ACCESS_TOKEN
+  
   robot.respond /are you there/, (res) ->
     res.send "Yes, I'm here!"
-
-  robot.respond /debug/, (res) ->
-    res.send "debug info:"
-    options =
-      noColor: true
-    json = prettyjson.render(res.message, options)
-    res.send  """
-              ```
-              #{json}
-              ```
-              """
