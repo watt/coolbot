@@ -36,7 +36,7 @@ module.exports = (robot) ->
         name: emoji
         channel: res.message.room
         timestamp: res.message.id
-        token: process.env.SLACK_ACCESS_TOKEN
+        token: process.env.HUBOT_SLACK_TOKEN
       .get() (err, resp, body) ->
         if err?
           robot.emit 'error', err, msg
