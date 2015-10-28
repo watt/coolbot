@@ -37,6 +37,13 @@ module.exports = (robot) ->
         channel: res.message.room
         timestamp: res.message.id
         token: process.env.SLACK_ACCESS_TOKEN
+      .get() (err, resp, body) ->
+        if err?
+          robot.emit 'error', err, msg
+          return
+
+        if resp.statusCode != 200 || !JSON.parse(body).ok
+          robot.logger.error "reaction failed: #{resp.statusCode} #{body}"
   
   robot.respond /are you there/, (res) ->
     res.send "Yes, I'm here!"
